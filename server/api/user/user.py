@@ -40,7 +40,20 @@ class User(Resource):
         'tags': ['user'],  # 어떤 종류의 기능인지 분류.
         'description': '로그인',
         'parameters': [
-            # dict로 파라미터들 명시.
+            {
+                'name': 'email',
+                'description': '로그인에 사용할 이메일',
+                'in': 'formData', # query, formData 중 택일 (header 도 향후 사용)
+                'type': 'string', # string, integer, number (float), boolean 중 택일 (향후 file 도 사용 예정),
+                'required': True  # 필수 첨부 여부
+            },
+            {
+                'name': 'password',
+                'description': '로그인에 사용할 비밀번호',
+                'in': 'formData', # query, formData 중 택일 (header 도 향후 사용)
+                'type': 'string', # string, integer, number (float), boolean 중 택일 (향후 file 도 사용 예정),
+                'required': True  # 필수 첨부 여부
+            },
         ],
         'responses': {
             # 200일때의 응답 예시, 400일때의 예시 등.
