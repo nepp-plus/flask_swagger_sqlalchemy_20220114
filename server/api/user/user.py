@@ -172,6 +172,21 @@ class User(Resource):
         """회원가입"""
         
         args = put_parser.parse_args()
+        
+        
+        # 이미 사용중인 이메일이라면 400 리턴.
+        
+        already_email_user = Users.query\
+            .filter(Users.email == args['email'])\
+            .first()
+        
+        if already_email_user:
+            # 이미 이메일을 사용중인 사용자가 있다.
+            return {
+                'code': 400,
+                'message': '이미 사용중인 이메일 입니다.'
+            }, 400
+        
 
         # 파라미터들을 => users 테이블의 row로 추가. (INSERT INTO -> ORM SQLAlchemy로)
         
