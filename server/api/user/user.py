@@ -187,6 +187,19 @@ class User(Resource):
                 'message': '이미 사용중인 이메일 입니다.'
             }, 400
         
+        
+        # 이미 사용중인 연락처라면 (폰이라면), 가입 불허.
+        
+        already_phone_user = Users.query\
+            .filter(Users.phone == args['phone'])\
+            .first()
+            
+        if already_phone_user:
+            return {
+                'code': 400,
+                'message': '이미 사용중인 폰 번호 입니다.'
+            }, 400
+        
 
         # 파라미터들을 => users 테이블의 row로 추가. (INSERT INTO -> ORM SQLAlchemy로)
         
