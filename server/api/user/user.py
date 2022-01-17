@@ -89,7 +89,8 @@ class User(Resource):
         
         first_user = Users.query.first()
         
-        print('첫번째 사용자 : ', first_user)
+        print('첫번째 사용자 이름 : ', first_user.name)
+        print('첫 사용자의 폰번 : ', first_user.phone)
         
         return {
             "임시": "로그인 기능"
