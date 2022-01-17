@@ -288,3 +288,31 @@ class User(Resource):
                 'user': new_user.get_data_object()
             }
         }
+
+
+    @swagger.doc({
+        'tags': ['user'],
+        'description': '회원 탈퇴',
+        'parameters': [
+            {
+                'name': 'user_id',
+                'description': '몇번 사용자를 지울지?',
+                'in': 'query',
+                'type': 'integer',
+                'required': True
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': '삭제 성공'
+            },
+            '400': {
+                'description': '삭제 실패'
+            }
+        }
+    })
+    def delete(self):
+        """ 회원 탈퇴하기 """
+        return {
+            '임시': '회원탈퇴 기능'
+        }
