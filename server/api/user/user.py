@@ -6,6 +6,8 @@ from flask_restful_swagger_2 import swagger
 
 from server.model import Users  # users 테이블에 연결할 클래스를 가져오기.
 
+from server import db # DB에 INSERT / UPDATE 등의 반영을 하기 위한 변수.
+
 # 각 메쏘드별로 파라미터를 받아보자.
 
 # post메쏘드에서 사용할 파라미터
@@ -159,12 +161,22 @@ class User(Resource):
         """회원가입"""
         
         args = put_parser.parse_args()
+
+        # 파라미터들을 => users 테이블의 row로 추가. (INSERT INTO -> ORM SQLAlchemy로)
         
-        print(f"이메일 : {args['email']}")
-        print(f"비밀번호 : {args['password']}")
-        print(f"이름 : {args['name']}")
-        print(f"전화번호 : {args['phone']}")
+        # 객체지향 : 새로운 데이터 추가 -> 새 인스턴스를 만들자.
         
+        new_user =  Users()
+        new_user.email = args['email']
+        new_user.password = args['password']
+        new_user.name = args['name']
+        new_user.phone = args['phone']
+        
+        # new_user의 객체를 -> DB에 등록 준비 -> 확정.
+        
+        db.session.add(new_user)
+        db.session.commit()
+
         return {
             "임시": "회원가입 기능"
         }
