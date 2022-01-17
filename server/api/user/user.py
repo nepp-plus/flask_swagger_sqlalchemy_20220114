@@ -54,6 +54,14 @@ class User(Resource):
     })
     def post(self):
         """로그인"""
+        
+        # 받아낸 파라미터들을 dict 변수에 담아두자.
+        args = post_parser.parse_args()
+        
+        # 이메일, 비밀번호를 받아왔으면 확인
+        print(f"이메일 : {args['email']}")
+        print(f"비밀번호 : {args['password']}")
+        
         return {
             "임시": "로그인 기능"
         }
