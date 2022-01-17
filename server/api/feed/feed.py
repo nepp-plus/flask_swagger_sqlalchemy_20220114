@@ -87,7 +87,8 @@ class Feed(Resource):
     def get(self):
         """ 모든 게시글 최신순 조회 """
         
-        feed_data_arr = Feeds.query.all()
+        # 모든 게시글 -> 생성일시 역순으로 -> 최신순. (SQL : ORDER BY + DESC => ORM으로?)
+        feed_data_arr = Feeds.query.order_by(Feeds.created_at.desc()).all()
         
         feeds = [ row.get_data_object()  for row in feed_data_arr ]
         
