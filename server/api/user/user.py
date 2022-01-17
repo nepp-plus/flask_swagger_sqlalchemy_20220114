@@ -13,6 +13,7 @@ from server import db # DB에 INSERT / UPDATE 등의 반영을 하기 위한 변
 # get메쏘드에서 사용할 파라미터
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('email', type=str, required=False, location='args')
+get_parser.add_argument('name', type=str, required=False, location='args')
 
 # post메쏘드에서 사용할 파라미터
 post_parser = reqparse.RequestParser()  # post로 들어오는 파라미터를 확인해볼 변수
@@ -42,7 +43,14 @@ class User(Resource):
                 'in': 'query',
                 'type': 'string',
                 'required': False
-            }
+            },
+            {
+                'name': 'name',
+                'description': '검색해볼 이름 - 일부분만 일치해도 찾아줌',
+                'in': 'query',
+                'type': 'string',
+                'required': False
+            },
         ],
         'responses': {
             # 200일때의 응답 예시, 400일때의 예시 등.
@@ -83,6 +91,16 @@ class User(Resource):
                 }, 400
         
         # 2. 이름이 파라미터로 왔다면 -> 경진 => 조경진도 리턴. LIKE
+        
+        if args['name']:
+            # 이메일은 첨부가 안되어있어야 함.
+            
+            # ex. "경" =>  조경진 / 박진경 등등 여러 경우가 결과로 나올 수 있다. => 검색 결과 여러개로. all()
+            # 쿼리의 조건에서 LIKE 활용 방법 예시.
+            
+            users_by_name = Users.query.filter(Users.name.like( f"%{args['name']}%" ) ).all()
+            
+            print(users_by_name)
         
         return {
             "임시": "사용자 정보 조회"
