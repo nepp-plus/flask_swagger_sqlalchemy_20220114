@@ -111,7 +111,7 @@ class User(Resource):
             users_by_name = Users.query.filter(Users.name.like( f"%{args['name']}%" ) ).all()
             
             # JSON으로 내려갈 수 있는 dict 형태로 목록 변환.
-            searched_users_list = [ user.get_data_object()  for user in users_by_name ]
+            searched_users_list = [ user.get_data_object(need_feeds=True)  for user in users_by_name ]
             
             return {
                 'code': 200,
