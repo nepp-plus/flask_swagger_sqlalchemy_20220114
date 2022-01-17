@@ -16,4 +16,3 @@ class Users(db.Model):
     
     # 3. 객체 -> dict로 변환 메쏘드 (응답 내려주는 용도)
     
-    pass
