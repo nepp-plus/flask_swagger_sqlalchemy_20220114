@@ -21,10 +21,12 @@ def create_app(config_name):
     
     from server.api.user import User
     from server.api.lecture import Lecture
+    from server.api.feed import Feed
     
     # api폴더에서 만든 User 클래스를 가져다가 => /user로 접속 가능하게 등록.
     api.add_resource(User, '/user')
     api.add_resource(Lecture, '/lecture')
+    api.add_resource(Feed, '/feed')
     
     # swagger 문서를 자동 생성
     
