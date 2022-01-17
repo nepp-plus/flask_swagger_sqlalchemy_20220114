@@ -14,5 +14,15 @@ class Users(db.Model):
     name = db.Column(db.String(20), nullable=False)
     phone = db.Column(db.String(15))  # nullable의 기본값은 null 허용.
     
-    # 3. 객체 -> dict로 변환 메쏘드 (응답 내려주는 용도)
+    # 3. 객체 -> dict로 변환 메쏘드 (JSON 응답 내려주는 용도)
+    
+    def get_data_object(self):
+        data = {
+            'id': self.id,
+            'email': self.email,
+            'name': self.name,
+            'phone_num': self.phone
+        }
+        
+        return data
     
