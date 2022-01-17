@@ -65,6 +65,6 @@ class Feed(Resource):
             'code': 200,
             'message': '게시글 등록 성공',
             'data': {
-                # 'feed': new_feed.
+                'feed': new_feed.get_data_object()
             }
         }
