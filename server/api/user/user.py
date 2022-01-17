@@ -85,15 +85,12 @@ class User(Resource):
         args = post_parser.parse_args()
         
 
-        # email이 동일한 사람이 있는지? 찾아보자. (SELECT 사용)
+        # email이 동일한 사람이 있는지? 찾아보자. (SELECT / WHERE 사용)
         
-        all_users = Users.query.all()
+        login_user = Users.query.filter(Users.email == args['email']).first() # 쿼리 수행 결과중 첫 줄.
         
-        print(all_users)
-        
-        for user in all_users:
-            print('사용자 이름 : ', user.name)
-        
+        # 일치하는 사람이 없다면? login_user 에 None이 대입됨.
+        print('로그인 유져 : ', login_user)
         
         return {
             "임시": "로그인 기능"
