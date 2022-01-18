@@ -94,9 +94,20 @@ class Feed(Resource):
                 s3_file_name = f"images/feed_images/MySNS_{hashlib.md5(upload_user.email.encode('utf8')).hexdigest()}_{round(time.time() * 10000)}{file_extension}"
                 
                 # 2. aws s3에 파일 업로드
+                image_body = image.stream.body()
+                
+                aws_s3\
+                    .Bucket(current_app.config['AWS_S3_BUCKET_NAME'])\
+                    .put_object(Key=s3_file_name, Body=image_body)
+                
+                aws_s3\
+                    .ObjectAcl(current_app.config['AWS_S3_BUCKET_NAME'], s3_file_name)\
+                    .put(ACL='public-read')
                 
                 # feed_images 테이블에, 이 게시글의 사진으로 S3사진 주소 등록.
-                pass
+                
+                
+                
         
         return {
             'code': 200,
