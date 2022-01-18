@@ -16,6 +16,11 @@ class Config(object):
     # DB 변경 추적 기능 꺼두기
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
+    # S3 접속 정보들을 변수들로 저장
+    AWS_ACCESS_KEY_ID = 'AKIAYEL64SLYIIYVDTUZ'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_S3_BUCKET_NAME = 'neppplus.python.202201.ckj' # 어느 저장소에 저장할건지. 이름
+    
 class ProductionConfig(Config):
     # 기본 설정 그대로. 실 서버에서도.
     pass
