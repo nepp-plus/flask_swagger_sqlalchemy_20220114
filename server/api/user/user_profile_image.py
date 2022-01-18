@@ -1,5 +1,6 @@
 import boto3
 import time
+import os
 
 from flask import current_app
 from flask_restful import Resource, reqparse
@@ -72,8 +73,13 @@ class UserProfileImage(Resource):
             
             # 2. 확장자 추출
             
+            # 파일이름 / 확장자 중, 확장자만 변수에 담자.
+            _, file_extension  = os.path.splitext(file.filename)  # 원래 올라온 파일명을 => 파일이름/확장자로 분리
+            
+            new_file_name = f"{new_file_name}{file_extension}"
+            
             # 최종 경로 => 1,2의 합체 + S3의 폴더
-            s3_file_path = f'images/profile_imgs/{file.filename}'  # 올라갈 경로
+            s3_file_path = f'images/profile_imgs/{new_file_name}'  # 올라갈 경로
             
             # 파일 본문도 따로 저장. => 실제로 S3 경로에 업로드.
             file_body = file.stream.read() # 올려줄 파일
