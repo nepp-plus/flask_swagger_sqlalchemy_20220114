@@ -44,6 +44,14 @@ class Feed(Resource):
                 'type': 'string',
                 'required': True
             },
+            {
+                'name': 'feed_images',
+                'description': '게시글 첨부 사진',
+                'in': 'formData',
+                'type': 'file',
+                'required': False
+            },
+            
         ],
         'responses': {
             '200': {
@@ -97,7 +105,7 @@ class Feed(Resource):
                 s3_file_name = f"images/feed_images/MySNS_{encrypted_user_email}_{now_number}{file_extension}"
                 
                 # 2. aws s3에 파일 업로드
-                image_body = image.stream.body()
+                image_body = image.stream.read()
                 
                 aws_s3\
                     .Bucket(current_app.config['AWS_S3_BUCKET_NAME'])\
