@@ -4,7 +4,7 @@
 from functools import wraps
 import jwt
 
-from flask import current_app
+from flask import current_app, g # g: global 프로젝트 전역에서 공유할 수 있는 공간.
 from flask_restful import reqparse
 
 from server.model import Users
@@ -70,6 +70,11 @@ def token_required(func):
         
         # 3.1. 사용자가 제대로 나왔다 => 올바른 토큰 => 원래 함수의 내용 실행
         if user:
+            
+            # 토큰으로 사용자를 찾아냈다면 => 원본 함수에서도, 그 사용자를 가져다 쓰면 편하겠다.
+            # 전역변수를 이용해서, 사용자를 전달하자.
+            g.user = user
+            
             return func(*args, **kwargs) # 원본 함수 내용 실행. 결과 리턴.
         
         # 3.2. 사용자가 안나왔다 (None) => 잘못된 토큰 => 403 에러 리턴.
