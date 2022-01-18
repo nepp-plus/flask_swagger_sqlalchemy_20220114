@@ -28,5 +28,7 @@ class Feeds(db.Model):
         if need_writer:
             data['writer'] = self.writer.get_data_object()
         
+        # 이 글이 어느 강의에 대해 쓰인건지도 첨부.
+        data['lecture'] = self.lecture.get_data_object()
         
         return data
