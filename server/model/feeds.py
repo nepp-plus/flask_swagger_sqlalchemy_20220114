@@ -13,6 +13,9 @@ class Feeds(db.Model):
     writer = db.relationship('Users')
     lecture = db.relationship('Lectures')
     
+    # ORM으로 관계 표현 (SQLAlchemy)의 정석 => 부모의 입장에서, 자식목록을 갖고있자.
+    feed_images = db.relationship('FeedImages')
+    
     
     def get_data_object(self, need_writer=True):
         data = {
@@ -21,6 +24,7 @@ class Feeds(db.Model):
             'lecture_id': self.lecture_id,
             'content': self.content,
             'created_at': str(self.created_at),
+            'images': [ fi.get_data_object()  for fi in self.feed_images ]
         }
         
         
