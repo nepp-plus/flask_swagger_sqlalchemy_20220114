@@ -14,6 +14,9 @@ put_parser = reqparse.RequestParser()
 put_parser.add_argument('feed_reply_id', type=int, required=True, location='form')
 put_parser.add_argument('content', type=str, required=True, location='form')
 
+delete_parser = reqparse.RequestParser()
+delete_parser.add_argument('feed_reply_id', type=int, required=True, location='args')
+
 
 class FeedReply(Resource):
     
@@ -149,4 +152,64 @@ class FeedReply(Resource):
         return {
             'code':200,
             'message': '댓글 수정 성공'
+        }
+        
+        
+    @swagger.doc({
+        'tags': ['feed/reply'],
+        'description': '달아둔 댓글 삭제',
+        'parameters': [
+            {
+                'name':'X-Http-Token',
+                'description':'사용자 토큰',
+                'in': 'header',
+                'type': 'string',
+                'required': True,
+            },
+            {
+                'name':'feed_id',
+                'description':'몇번 게시글에 포함된 댓글을 수정할지?',
+                'in': 'path',
+                'type': 'integer',
+                'required': True,
+            },
+            {
+                'name':'feed_reply_id',
+                'description':'몇번 댓글을 삭제할지?',
+                'in': 'query',
+                'type': 'integer',
+                'required': True,
+            },
+        ],
+        'responses':{
+            '200':{
+                'description': '삭제 성공'
+            }
+        },
+    })
+    @token_required
+    def delete(self, feed_id):
+        """ 댓글 삭제 """
+        args = delete_parser.parse_args()
+        user = g.user
+        
+        # 기존 댓글을 확인. => 내가 쓴 댓글이 맞는지.
+        
+        reply = FeedReplies.query.filter(FeedReplies.id == args['feed_reply_id']).first()
+        
+        if reply.user_id != user.id:
+            # 댓글의 작성자가, 토큰 사용자가 아님.
+            return {
+                'code': 400,
+                'message': '본인이 작성한 댓글만 삭제할 수 있습니다.'
+            }, 400
+        
+        
+        # DB에 삭제 처리
+        db.session.delete(reply)
+        db.session.commit()
+        
+        return {
+            'code':200,
+            'message': '댓글 삭제 성공'
         }
