@@ -213,3 +213,41 @@ class FeedReply(Resource):
             'code':200,
             'message': '댓글 삭제 성공'
         }
+        
+        
+    @swagger.doc({
+        'tags': ['feed/reply'],
+        'description': '특정 게시글에 달린 댓글 목록 보기',
+        'parameters': [
+            {
+                'name':'feed_id',
+                'description':'몇번 게시글에 포함된 댓글목록을 조회할지?',
+                'in': 'path',
+                'type': 'integer',
+                'required': True,
+            },
+        ],
+        'responses':{
+            '200':{
+                'description': '댓글 목록 조회 성공'
+            }
+        },
+    })
+    def get(self, feed_id):
+        """ 게시글의 댓글 목록 조회 """
+        # args = delete_parser.parse_args()
+        # user = g.user
+        
+        reply_data_list = FeedReplies.query\
+            .filter(FeedReplies.feed_id == feed_id)\
+            .all()
+            
+        replies = [ reply.get_data_object() for reply in reply_data_list ]
+        
+        return {
+            'code':200,
+            'message': '댓글 목록 조회 성공',
+            'data': {
+                'replies': replies
+            }
+        }
