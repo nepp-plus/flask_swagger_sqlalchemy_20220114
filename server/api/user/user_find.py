@@ -85,11 +85,22 @@ class UserFind(Resource):
         # 응답의 본문이 json으로 올 예정 => json형태로 가공해서 받자.
         respJson = response.json()
         
-        print('문자 전송 결과 : ', respJson)
-        print('결과 코드 : ', respJson['result_code'])
-        print('결과 메세지 : ', respJson['message'])
+        # 결과 코드가 1인게 성공. => 우리 서버도 200 리턴.
+        # 그 외의 값 => 알리고에서 문제 => 그 내용을 그대로 500 으로 리턴.
+        #  400 : Bad Request -> 요청 보낸쪽에서 문제.
+        #  403 : 권한 -> 권한 문제
+        #  404 : 해당 주소 기능 없음
+        #  500 : 서버 내부의 문제. (Interer Server Error)
         
-        return {
-            'code': 200,
-            'message': '이메일 찾기 - 문자 전송 완료',
-        }
+        if int(respJson['result_code']) != 1:
+            # 정상 전송 실패
+            return {
+                'code': 500,
+                'message': respJson['message']   # 알리고 에서 왜 실패했는지는 받은 문구 그대로 리턴.
+            }, 500
+        else:
+            # 정상 전송 성공
+            return {
+                'code': 200,
+                'message': '이메일 찾기 - 문자 전송 완료',
+            }
