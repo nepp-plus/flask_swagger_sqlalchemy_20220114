@@ -2,6 +2,7 @@
 from server import db
 
 import datetime
+import hashlib
 
 class Users(db.Model):
     # SQLAlchemy 라이브러리의 Model 클래스 활용.
@@ -62,5 +63,10 @@ class Users(db.Model):
     @password.setter
     def password(self, input_password):
         # password = 대입값  상황에서, 대입값을 input_password에 담아줌.
-        # 임시 : 들어온값을 그대로 password_hashed 컬럼에 저장.
-        self.password_hashed = input_password
+        # 비번 원문을 => 암호화 해서 대입.
+        self.password_hashed = self.generate_password_hash(input_password)
+        
+    # 함수 추가 - 비밀번호 원문을 받아서 => 암호화 해주는 함수.
+    def generate_password_hash(self, input_password):
+        # 입력받은 비번을 md5 로 변환해보자. hashlib 모듈 활용.
+        return hashlib.md5( input_password.encode('utf8') ).hexdigest()
