@@ -68,8 +68,12 @@ class Users(db.Model):
         
     # 함수 추가 - 비밀번호 원문을 받아서 => 암호화 해주는 함수.
     def generate_password_hash(self, input_password):
-        # 입력받은 비번을 md5 로 변환해보자. hashlib 모듈 활용.
-        return hashlib.md5( input_password.encode('utf8') ).hexdigest()
+        
+        # 입력받은 비번을 SHA512 로 변환해보자. (맞추기 어렵다 / 길이가 길게 나옴.)  1차 암호화
+        pre_hashed = hashlib.sha512( input_password.encode('utf8') ).hexdigest()
+        
+        # 1차 암호화된 결과물을 다시 md5 로 변환해보자. hashlib 모듈 활용. 2차 암호화
+        return hashlib.md5( pre_hashed.encode('utf8') ).hexdigest()
     
     # 비번 원문을 받아서 => 비밀번호가 맞는 비번인지 암호화된 값 끼리 비교해보는 함수.
     def verify_password(self, input_password):
