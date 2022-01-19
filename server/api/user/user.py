@@ -286,7 +286,7 @@ class User(Resource):
         
         new_user =  Users()
         new_user.email = args['email']
-        new_user.password = args['password']
+        new_user.password = args['password']  # password = 비밀번호 만 실행해도, 알아서 암호화되어 들어가도록.
         new_user.name = args['name']
         new_user.phone = args['phone']
         

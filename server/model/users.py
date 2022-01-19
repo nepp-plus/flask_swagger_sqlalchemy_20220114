@@ -49,3 +49,18 @@ class Users(db.Model):
         
         return data
     
+
+    # 비밀번호 암호화 관련 기능들
+    
+    # 코드에서는 사용자.password = 비번값  형태로 사용 지원.
+    # 대입은 가능, 읽기는 불가. => 원문 파악 X
+    @property
+    def password(self):  # 조회 하려는 상황에는 에러 처리.
+        raise AttributeError('password 변수는 쓰기 전용입니다. 조회는 불가합니다.')
+    
+    # password변수에 대입은 허용.
+    @password.setter
+    def password(self, input_password):
+        # password = 대입값  상황에서, 대입값을 input_password에 담아줌.
+        # 임시 : 들어온값을 그대로 password_hashed 컬럼에 저장.
+        self.password_hashed = input_password
