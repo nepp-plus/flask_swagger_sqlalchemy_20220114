@@ -80,6 +80,26 @@ class UserPasswordFind(Resource):
             }, 400
         
             
+        # 메일전송 api => mailgun.com 사이트 활용.
+        #  => 도메인 주소 구매 후, 사이트에 세팅까지 마친 후에 활용 가능.
+        
+        # 어느 사이트(주소) / 메쏘드 / 파라미터 세가지 세팅. requests 모듈
+        
+        mailgun_url = 'https://api.mailgun.net/v3/mg.gudoc.in/messages'
+        
+        email_data = {
+            'from': 보내는사람,
+            'to': 받는사람,
+            'subject': '비밀번호 찾기 메일 제목',
+            'text': '실제 발송 내용'
+        }
+        
+        requests.post(
+            url= mailgun_url,
+            data=email_data,
+            auth=('api', 메일건키값)
+        )
+            
         return {
             'code': 200,
             'message': '비밀번호를 이메일로 전송했습니다. (임시)'
