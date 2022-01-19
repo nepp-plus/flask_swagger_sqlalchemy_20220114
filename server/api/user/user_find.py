@@ -50,14 +50,26 @@ class UserFind(Resource):
         
         user = Users.query\
             .filter(Users.name == args['name'])\
-            .filter(Users.phone == args['phone'])\
             .first()
         
         if user is None:
             return {
                 'code': 400,
-                'message': '이름 / 폰번 둘다 맞게 입력해야 합니다.'
+                'message': '해당 이름의 사용자는 없습니다.'
             }, 400
+        
+        # 이름으로 사용자 검색 성공
+        # 폰번도 비교. => "-" 을 모두 삭제하고 나서 비교해보자.
+        
+        input_phone = args['phone'].replace('-', '')
+        user_phone = user.phone.replace('-',  '')
+        
+        if input_phone != user_phone:
+            return {
+                'code': 400,
+                'message': '이름은 맞지만 폰번이 다릅니다.'
+            }, 400
+        
             
         # 알리고 사이트의 API에 문자 전송 Request 전송. => requests 모듈 활용
         
