@@ -10,6 +10,12 @@ post_parser = reqparse.RequestParser()
 post_parser.add_argument('feed_id', type=int, required=True, location='form')
 post_parser.add_argument('content', type=str, required=True, location='form')
 
+
+put_parser = reqparse.RequestParser()
+put_parser.add_argument('feed_reply_id', type=int, required=True, location='form')
+put_parser.add_argument('content', type=str, required=True, location='form')
+
+
 class FeedReply(Resource):
     
     @swagger.doc({
@@ -72,3 +78,47 @@ class FeedReply(Resource):
             }
         }
     
+    
+    # put 메쏘드 만들기 (타 클래스 참고 / 코드 재활용)
+    # 댓글의 id를 받아서 => 수정 처리.
+    # 제약 사항 : 본인이 쓴 댓글만 실제 수정. 타인이 쓴 댓글? 400 , '본인이 쓴 댓글만 수정 가능합니다.'
+    
+    @swagger.doc({
+        'tags': ['feed/reply'],
+        'description': '달아둔 댓글 수정',
+        'parameters': [
+            {
+                'name':'X-Http-Token',
+                'description':'사용자 토큰',
+                'in': 'header',
+                'type': 'string',
+                'required': True,
+            },
+            {
+                'name':'feed_reply_id',
+                'description':'몇번 댓글을 수정할지?',
+                'in': 'formData',
+                'type': 'integer',
+                'required': True,
+            },
+            {
+                'name':'content',
+                'description':'수정해줄 내용',
+                'in': 'formData',
+                'type': 'string',
+                'required': True,
+            },
+        ],
+        'responses':{
+            '200':{
+                'description': '수정 성공'
+            }
+        },
+    })
+    @token_required
+    def put(self):
+        """ 댓글 수정 """
+        return {
+            'code':200,
+            'message': '댓글 수정 성공'
+        }
