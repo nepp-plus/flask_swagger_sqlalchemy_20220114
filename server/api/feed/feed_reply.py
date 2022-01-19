@@ -94,6 +94,13 @@ class FeedReply(Resource):
                 'required': True,
             },
             {
+                'name':'feed_id',
+                'description':'몇번 게시글에 포함된 댓글을 수정할지?',
+                'in': 'path',
+                'type': 'integer',
+                'required': True,
+            },
+            {
                 'name':'feed_reply_id',
                 'description':'몇번 댓글을 수정할지?',
                 'in': 'formData',
@@ -115,8 +122,30 @@ class FeedReply(Resource):
         },
     })
     @token_required
-    def put(self):
+    def put(self, feed_id):
         """ 댓글 수정 """
+        args = put_parser.parse_args()
+        user = g.user
+        
+        # 기존 댓글을 확인. => 내가 쓴 댓글이 맞는지.
+        
+        reply = FeedReplies.query.filter(FeedReplies.id == args['feed_reply_id']).first()
+        
+        if reply.user_id != user.id:
+            # 댓글의 작성자가, 토큰 사용자가 아님.
+            return {
+                'code': 400,
+                'message': '본인이 작성한 댓글만 수정할 수 있습니다.'
+            }, 400
+        
+        
+        # 찾아낸 댓글의 content 항목 수정.
+        reply.content =  args['content']
+        
+        # DB에 기록
+        db.session.add(reply)
+        db.session.commit()
+        
         return {
             'code':200,
             'message': '댓글 수정 성공'
