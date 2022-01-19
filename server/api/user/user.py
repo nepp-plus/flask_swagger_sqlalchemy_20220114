@@ -185,7 +185,7 @@ class User(Resource):
         # login_user의 password가 실제 존재. Vs. 파라미터의 패스워드 비교.
         # DB에 추가 쿼리 조회 필요 없음.
         
-        if login_user.password == args['password']:
+        if login_user.verify_password(args['password']):
             # 이메일이 맞는 사용자 -> 비밀번호와, 파라미터의 비밀번호가 같다.
             # 로그인 성공.
             return {
