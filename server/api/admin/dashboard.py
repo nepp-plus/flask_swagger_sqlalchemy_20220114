@@ -5,6 +5,7 @@ from flask_restful_swagger_2 import swagger
 
 from server import db
 from server.model import Users, LectureUser, Lectures
+from server.api.utils import token_required
 
 class AdminDashboard(Resource):
     
@@ -26,6 +27,7 @@ class AdminDashboard(Resource):
             }
         }
     })
+    @token_required
     def get(self):
         """ 관리자 - 대쉬보드 """
         # 탈퇴하지 않은 회원 수? => SELECT / users 테이블 활용 => Users 모델 import
