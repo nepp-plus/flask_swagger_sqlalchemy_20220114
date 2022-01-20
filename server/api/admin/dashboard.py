@@ -33,14 +33,8 @@ class AdminDashboard(Resource):
             
         # print(lecture_fee_amount)  =>  JSON응답으로 내려갈 수 없다. 가공 처리 필요
         
-        amount_list = []
+        amount_list = [ {'lecture_title': row[0], 'amount':int(row[1])} for row in lecture_fee_amount ]
         
-        for  row  in lecture_fee_amount:
-            amount_list.append( {
-                'lecture_title': row[0],
-                'amount': int(row[1]),  # db의 합계 => Decimal  => int() 로 가공.
-            } )
-            
         
         return {
             'code':200,
