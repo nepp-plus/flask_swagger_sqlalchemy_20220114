@@ -6,7 +6,7 @@ from flask_restful_swagger_2 import swagger
 
 from server import db
 from server.model import Users, LectureUser, Lectures
-from server.api.utils import token_required
+from server.api.utils import token_required, admin_required
 
 class AdminDashboard(Resource):
     
@@ -29,17 +29,9 @@ class AdminDashboard(Resource):
         }
     })
     @token_required
+    @admin_required
     def get(self):
         """ 관리자 - 대쉬보드 """
-        
-        # 토큰으로 찾아낸 사용자가 관리자인가?
-        user = g.user
-        
-        if not user.is_admin:
-            return {
-                'code': 403,
-                'message': '이 기능은 관리자만 이용 가능합니다.'
-            }, 403
         
         # 탈퇴하지 않은 회원 수? => SELECT / users 테이블 활용 => Users 모델 import
         

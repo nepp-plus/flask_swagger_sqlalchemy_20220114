@@ -86,3 +86,21 @@ def token_required(func):
             
     # token_required 이름표가 붙은 함수들에게 => decorator 함수 전달
     return decorator
+
+
+# 다른 함수의 시작전에, 토큰을 통해 얻어낸 사용자가 -> 관리자가 맞는지만 추가 검사하는 데코레이터.
+def admin_required(func):
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        # 토큰으로 사용자는 받아냈다고 전제하자. => g변수에 user가 들어있다. 전제.
+        user = g.user
+        
+        if not user.is_admin:
+            return {
+                'code': 403,
+                'message': '관리자 권한이 없습니다.'
+            }, 403
+            
+        return func(*args, **kwargs)
+    
+    return decorator
