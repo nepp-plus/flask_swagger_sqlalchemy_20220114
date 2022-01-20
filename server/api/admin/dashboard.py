@@ -23,18 +23,30 @@ class AdminDashboard(Resource):
         # filter 나열 => JOIN / ON 을 한번에 명시.
         # filter 나열 2 => JOIN이 끝나면, WHERE절처럼 실제 필터 조건.
         
+        # group_by => 어떤 값을 기준으로 그룹지을지 
+        
         lecture_fee_amount = db.session.query( Lectures.title, db.func.sum(Lectures.fee) )\
             .filter(Lectures.id == LectureUser.lecture_id)\
             .filter(LectureUser.user_id == Users.id)\
             .group_by(Lectures.id)\
             .all()
             
-        print(lecture_fee_amount)
+        # print(lecture_fee_amount)  =>  JSON응답으로 내려갈 수 없다. 가공 처리 필요
+        
+        amount_list = []
+        
+        for  row  in lecture_fee_amount:
+            amount_list.append( {
+                'lecture_title': row[0],
+                'amount': int(row[1]),  # db의 합계 => Decimal  => int() 로 가공.
+            } )
+            
         
         return {
             'code':200,
             'message': '관리자용 각종 통계 api',
             'data': {
-                'live_user_count': users_count
+                'live_user_count': users_count,
+                'lecture_amount': amount_list,  # 각 강의 별 총합
             }
         }
